@@ -15,34 +15,43 @@ export const managerMenuListItems = (
                 <ListItemText primary="Bikes" />
             </ListItem>
         </Link>
-        <ListItem button>
-            <ListItemIcon>
-                <Icon>person</Icon>
-            </ListItemIcon>
-            <ListItemText primary="Users" />
-        </ListItem>
-        <ListItem button>
-            <ListItemIcon>
-                <Icon>list</Icon>
-            </ListItemIcon>
-            <ListItemText primary="Bookings" />
-        </ListItem>
+        <Link to="users" style={{ textDecoration: 'none' }}>
+            <ListItem button>
+                <ListItemIcon>
+                    <Icon>person</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Users" />
+            </ListItem>
+        </Link>
+        <Link to="bike-bookings" style={{ textDecoration: 'none' }}>
+            <ListItem button>
+                <ListItemIcon>
+                    <Icon>list</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Bookings" />
+            </ListItem>
+        </Link>
     </div>
 );
 
 export const userMenuListItems = (
     <div>
-        <ListItem button>
-            <ListItemIcon>
-                <Icon>directions_bike</Icon>
-            </ListItemIcon>
-            <ListItemText primary="Bikes" />
-        </ListItem>
-        <ListItem button>
-            <ListItemIcon>
-                <Icon>list</Icon>
-            </ListItemIcon>
-            <ListItemText primary="My Reservations" />
-        </ListItem>
+
+        <Link to="book-a-bike" style={{ textDecoration: 'none' }}>
+            <ListItem button>
+                <ListItemIcon>
+                    <Icon>directions_bike</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Bikes" />
+            </ListItem>
+        </Link>
+        <Link to="my-bookings" style={{ textDecoration: 'none' }}>
+            <ListItem button>
+                <ListItemIcon>
+                    <Icon>list</Icon>
+                </ListItemIcon>
+                <ListItemText primary="My Bookings" />
+            </ListItem>
+        </Link>
     </div>
 );
