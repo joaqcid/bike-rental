@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Checkbox } from '@material-ui/core'
+import { Checkbox, Typography, FormControlLabel } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -100,13 +100,17 @@ class BikeFormDialog extends React.Component {
               onChange={this.handleChange('location').bind(this)}
               fullWidth
             />
-            <Checkbox
-              color="primary"
-              checked={this.state.checkedA}
-              onChange={this.handleChange('available').bind(this)}
-              value="available"
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={this.state.checkedA}
+                  onChange={this.handleChange('available').bind(this)}
+                  value="available"
+                />
+              }
+              label="Available"
             />
-
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
