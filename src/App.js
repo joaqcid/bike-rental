@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Layout from './components/Layout';
 import Home from './components/Home';
 // import BikeAdmin from './components/bike-admin/BikeAdmin';
-import Todos from './components/bike-admin/BikeAdmin.1';
+import Todos from './components/bike-admin/BikeAdmin';
 import { store } from './redux/store';
 import { Provider } from 'react-redux'
 

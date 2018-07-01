@@ -1,15 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch, Button } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
@@ -19,67 +14,68 @@ const styles = theme => ({
   },
 });
 
-function BikeAdmin({ bikes, firebase }) {
-  const { classes } = props;
+class BikeAdmin extends Component {
+  // Build Todos list if todos exist and are loaded  
 
-  const bikesList = !isLoaded(bikes)
-    ? 'Loading'
-    : isEmpty(bikes)
-      ? 'Bike list is empty'
-      : Object.keys(bikes).map(
-        (key, id) => (
-          <TableRow key={key}>
-            <TableCell component="th" scope="row">
-              {bikes[key].model} {id}
-            </TableCell>            
-          </TableRow>
+  handleAdd() {
+    const { firebase } = this.props;    
+    firebase.ref('/bikes').push().set({model:'fuji 22'});    
+  }
+
+  render() {
+    const { classes, bikes } = this.props;
+    const bikesList = !isLoaded(bikes)
+      ? <TableRow><TableCell>Loading...</TableCell></TableRow>
+      : isEmpty(bikes)
+        ? <TableRow><TableCell>Empty</TableCell></TableRow>
+        : Object.keys(bikes).map(
+          (key, id) => (
+            <TableRow key={key}>
+              <TableCell>{key}</TableCell>
+              <TableCell>{bikes[key].model}</TableCell>
+              <TableCell>{bikes[key].color}</TableCell>
+              <TableCell numeric>{bikes[key].weight}</TableCell>
+              <TableCell>{bikes[key].location}</TableCell>
+              <TableCell>{bikes[key].available ? 'yes' : 'no'}</TableCell>
+            </TableRow>
+          )
         )
-      )
 
-  return (
-    <Paper className={classes.root}>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Model</TableCell>
-            <TableCell>Color</TableCell>
-            <TableCell>Weight</TableCell>
-            <TableCell>Location</TableCell>
-            <TableCell>Available</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {bikesList}
-        </TableBody>
-      </Table>
-    </Paper>
-  );
+    return (
+      <div>
+        <Paper className={classes.root}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Id</TableCell>
+                <TableCell>Model</TableCell>
+                <TableCell>Color</TableCell>
+                <TableCell>Weight</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Available</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {bikesList}
+            </TableBody>
+          </Table>
+        </Paper>
+
+        <Button onClick={this.handleAdd.bind(this)}>
+          Add
+        </Button>
+      </div>
+    )
+  }
 }
 
-BikeAdmin.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 export default compose(
-  firebaseConnect((props) => {
-    return [
-      { path: '/bikes' }, // object notation
-    ]
-  }),
+  withStyles(styles),
+  firebaseConnect([
+    'bikes' // { path: '/todos' } // object notation
+  ]),
   connect((state) => ({
     bikes: state.firebase.data.bikes,
     // profile: state.firebase.profile // load profile
   }))
-  // firebaseConnect((props) => {
-  //   // Set listeners based on props (prop is route parameter from react-router in this case)
-  //   return [
-  //     { path: `todos/${props.params.todoId}` }, // create todo listener
-  //     // `todos/${props.params.todoId}` // equivalent string notation
-  //   ]
-  // }),
-  // connect(({ firebase }, props) => ({
-  //   todo: getVal(firebase, `data/todos/${props.params.todoId}`), // lodash's get can also be used
-  // }))
 )(BikeAdmin)
-// withStyles(styles)(BikeAdmin)
