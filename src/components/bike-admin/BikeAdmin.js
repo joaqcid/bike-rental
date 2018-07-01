@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch, Button } from '@material-ui/core'
+import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch, Button, IconButton, Icon } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
 import BikeFormDialog from './BikeFormDialog'
 
@@ -13,14 +13,21 @@ const styles = theme => ({
   },
   table: {
   },
+  button: {
+    margin: theme.spacing.unit,
+  }
 });
 
 class BikeAdmin extends Component {
-  // Build Todos list if todos exist and are loaded  
 
-  handleAdd() {
+  handleDelete(event, key) {
     const { firebase } = this.props;
-    firebase.ref('/bikes').push().set({ model: 'fuji 22' });
+    firebase.ref(`/bikes/${key}`).set(null);
+  }
+
+  handleEdit(event, key) {
+    const { firebase } = this.props;
+    firebase.ref(`/bikes/${key}`).set(null);
   }
 
   render() {
@@ -38,6 +45,14 @@ class BikeAdmin extends Component {
               <TableCell numeric>{bikes[key].weight}</TableCell>
               <TableCell>{bikes[key].location}</TableCell>
               <TableCell>{bikes[key].available ? 'yes' : 'no'}</TableCell>
+              <TableCell>
+                <IconButton className={classes.button} aria-label="Edit" onClick={event => this.handleEdit(event, key)} >
+                  <Icon>edit</Icon>
+                </IconButton>
+                <IconButton className={classes.button} aria-label="Delete" onClick={event => this.handleDelete(event, key)}>
+                  <Icon>delete</Icon>
+                </IconButton>
+              </TableCell>
             </TableRow>
           )
         )
@@ -55,6 +70,7 @@ class BikeAdmin extends Component {
                 <TableCell>Weight</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Available</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -70,12 +86,11 @@ class BikeAdmin extends Component {
 export default compose(
   withStyles(styles),
   firebaseConnect([
-    'bikes' // { path: '/todos' } // object notation
+    'bikes'
   ]),
-  connect((state) => {    
+  connect((state) => {
     return {
       bikes: state.firebase.data.bikes,
-      // profile: state.firebase.profile // load profile
     }
   })
 )(BikeAdmin)
