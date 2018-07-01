@@ -5,6 +5,7 @@ import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
+import BikeFormDialog from './BikeFormDialog'
 
 const styles = theme => ({
   root: {
@@ -18,8 +19,8 @@ class BikeAdmin extends Component {
   // Build Todos list if todos exist and are loaded  
 
   handleAdd() {
-    const { firebase } = this.props;    
-    firebase.ref('/bikes').push().set({model:'fuji 22'});    
+    const { firebase } = this.props;
+    firebase.ref('/bikes').push().set({ model: 'fuji 22' });
   }
 
   render() {
@@ -43,6 +44,7 @@ class BikeAdmin extends Component {
 
     return (
       <div>
+        <BikeFormDialog />
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
@@ -60,10 +62,6 @@ class BikeAdmin extends Component {
             </TableBody>
           </Table>
         </Paper>
-
-        <Button onClick={this.handleAdd.bind(this)}>
-          Add
-        </Button>
       </div>
     )
   }
@@ -74,8 +72,10 @@ export default compose(
   firebaseConnect([
     'bikes' // { path: '/todos' } // object notation
   ]),
-  connect((state) => ({
-    bikes: state.firebase.data.bikes,
-    // profile: state.firebase.profile // load profile
-  }))
+  connect((state) => {    
+    return {
+      bikes: state.firebase.data.bikes,
+      // profile: state.firebase.profile // load profile
+    }
+  })
 )(BikeAdmin)
