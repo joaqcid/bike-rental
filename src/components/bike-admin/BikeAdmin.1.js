@@ -1,42 +1,76 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles';
 
-const Todos = ({ todos, firebase }) => {
+const styles = theme => ({
+  root: {
+    margin: theme.spacing.unit * 3,
+  },
+  table: {
+  },
+});
+
+class BikeAdmin extends Component {
   // Build Todos list if todos exist and are loaded  
-  const todosList = !isLoaded(todos)
-    ? 'Loading'
-    : isEmpty(todos)
-      ? 'Todo list is empty'
-      : Object.keys(todos).map(
-        (key, id) => (
-          <li key={key}  >            
-            {key} {todos[key].model}
-          </li>
+
+  render() {
+    const { classes, bikes } = this.props;
+    const bikesList = !isLoaded(bikes)
+      ? <TableRow><TableCell>Loading...</TableCell></TableRow>
+      : isEmpty(bikes)
+        ? <TableRow><TableCell>Empty</TableCell></TableRow>
+        : Object.keys(bikes).map(
+          (key, id) => (
+            <TableRow key={key}>
+              <TableCell>{key}</TableCell>
+              <TableCell>{bikes[key].model}</TableCell>
+              <TableCell>{bikes[key].color}</TableCell>
+              <TableCell numeric>{bikes[key].weight}</TableCell>
+              <TableCell>{bikes[key].location}</TableCell>
+              <TableCell>{bikes[key].available ? 'yes' : 'no'}</TableCell>
+            </TableRow>
+          )
         )
-      )
-  return (
-    <div>
-      <h1>Todos</h1>
-      <ul>
-        {todosList}
-      </ul>
-      <input type="text"  />
-      <button onClick={this.handleAdd}>
-        Add
+
+    return (
+      <div>
+        <Paper className={classes.root}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Id</TableCell>
+                <TableCell>Model</TableCell>
+                <TableCell>Color</TableCell>
+                <TableCell>Weight</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Available</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {bikesList}
+            </TableBody>
+          </Table>
+        </Paper>
+
+        <button onClick={this.handleAdd}>
+          Add
       </button>
-    </div>
-  )
+      </div>
+    )
+  }
 }
 
 export default compose(
+  withStyles(styles),
   firebaseConnect([
     'bikes' // { path: '/todos' } // object notation
   ]),
   connect((state) => ({
-    todos: state.firebase.data.bikes,
+    bikes: state.firebase.data.bikes,
     // profile: state.firebase.profile // load profile
   }))
-)(Todos)
+)(BikeAdmin)
