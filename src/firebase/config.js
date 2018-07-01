@@ -7,11 +7,6 @@ const firebaseConfig = {
   databaseURL: "https://bike-rental-1ea5b.firebaseio.com",
 };
  
-// react-redux-firebase config
-export const rrfConfig = {
-  userProfile: 'users',
-}
- 
 // Initialize firebase instance
 firebase.initializeApp(firebaseConfig)
  

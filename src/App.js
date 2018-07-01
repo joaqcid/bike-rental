@@ -2,9 +2,11 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Layout from './components/Layout';
 import Home from './components/Home';
-import BikeAdmin from './components/bike-admin/BikeAdmin';
+// import BikeAdmin from './components/bike-admin/BikeAdmin';
+import Todos from './components/bike-admin/BikeAdmin.1';
 import { store } from './redux/store';
 import { Provider } from 'react-redux'
+
 
 class App extends React.Component {
   render() {
@@ -15,7 +17,7 @@ class App extends React.Component {
             <Layout />
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route path="/bikes" component={BikeAdmin} />
+              <Route path="/bikes" component={Todos} />
             </Switch>
           </div>
         </BrowserRouter>

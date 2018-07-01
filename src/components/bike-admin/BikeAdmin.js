@@ -7,32 +7,34 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 
 const styles = theme => ({
   root: {
     margin: theme.spacing.unit * 3,
   },
   table: {
-
   },
 });
 
-let id = 0;
-function createData(name, calories, fat, carbs, protein) {
-  id += 1;
-  return { id, name, calories, fat, carbs, protein };
-}
-
-const data = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-function BikeAdmin(props) {
+function BikeAdmin({ bikes, firebase }) {
   const { classes } = props;
+
+  const bikesList = !isLoaded(bikes)
+    ? 'Loading'
+    : isEmpty(bikes)
+      ? 'Bike list is empty'
+      : Object.keys(bikes).map(
+        (key, id) => (
+          <TableRow key={key}>
+            <TableCell component="th" scope="row">
+              {bikes[key].model} {id}
+            </TableCell>            
+          </TableRow>
+        )
+      )
 
   return (
     <Paper className={classes.root}>
@@ -48,19 +50,7 @@ function BikeAdmin(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map(n => {
-            return (
-              <TableRow key={n.id}>
-                <TableCell component="th" scope="row">
-                  {n.name}
-                </TableCell>
-                <TableCell numeric>{n.calories}</TableCell>
-                <TableCell numeric>{n.fat}</TableCell>
-                <TableCell numeric>{n.carbs}</TableCell>
-                <TableCell numeric>{n.protein}</TableCell>
-              </TableRow>
-            );
-          })}
+          {bikesList}
         </TableBody>
       </Table>
     </Paper>
@@ -71,4 +61,25 @@ BikeAdmin.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(BikeAdmin);
+export default compose(
+  firebaseConnect((props) => {
+    return [
+      { path: '/bikes' }, // object notation
+    ]
+  }),
+  connect((state) => ({
+    bikes: state.firebase.data.bikes,
+    // profile: state.firebase.profile // load profile
+  }))
+  // firebaseConnect((props) => {
+  //   // Set listeners based on props (prop is route parameter from react-router in this case)
+  //   return [
+  //     { path: `todos/${props.params.todoId}` }, // create todo listener
+  //     // `todos/${props.params.todoId}` // equivalent string notation
+  //   ]
+  // }),
+  // connect(({ firebase }, props) => ({
+  //   todo: getVal(firebase, `data/todos/${props.params.todoId}`), // lodash's get can also be used
+  // }))
+)(BikeAdmin)
+// withStyles(styles)(BikeAdmin)
