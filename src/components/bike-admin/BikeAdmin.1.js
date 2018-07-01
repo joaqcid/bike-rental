@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch } from '@material-ui/core'
+import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -16,6 +16,11 @@ const styles = theme => ({
 
 class BikeAdmin extends Component {
   // Build Todos list if todos exist and are loaded  
+
+  handleAdd() {
+    const { firebase } = this.props;    
+    firebase.ref('/bikes').push().set({model:'fuji 22'});    
+  }
 
   render() {
     const { classes, bikes } = this.props;
@@ -56,9 +61,9 @@ class BikeAdmin extends Component {
           </Table>
         </Paper>
 
-        <button onClick={this.handleAdd}>
+        <Button onClick={this.handleAdd.bind(this)}>
           Add
-      </button>
+        </Button>
       </div>
     )
   }
