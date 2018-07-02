@@ -20,14 +20,27 @@ const styles = theme => ({
 
 class BikeAdmin extends Component {
 
+  state = {
+    isOpen: false,
+    bike: {}
+  }
+
   handleDelete(event, key) {
     const { firebase } = this.props;
     firebase.ref(`/bikes/${key}`).set(null);
   }
 
-  handleEdit(event, key) {
-    const { firebase } = this.props;
-    firebase.ref(`/bikes/${key}`).set(null);
+  handleEdit(event, key, item) {
+    this.setState({
+      openEdit: true,
+      bike: item,
+    });
+  }
+
+  toggleDialog(){
+    this.setState({
+      openEdit: !this.state.openEdit,      
+    });
   }
 
   render() {
@@ -46,7 +59,7 @@ class BikeAdmin extends Component {
               <TableCell>{bikes[key].location}</TableCell>
               <TableCell>{bikes[key].available ? 'yes' : 'no'}</TableCell>
               <TableCell>
-                <IconButton className={classes.button} aria-label="Edit" onClick={event => this.handleEdit(event, key)} >
+                <IconButton className={classes.button} aria-label="Edit" onClick={event => this.handleEdit(event, key, bikes[key])} >
                   <Icon>edit</Icon>
                 </IconButton>
                 <IconButton className={classes.button} aria-label="Delete" onClick={event => this.handleDelete(event, key)}>
@@ -59,7 +72,7 @@ class BikeAdmin extends Component {
 
     return (
       <div>
-        <BikeFormDialog />
+        <BikeFormDialog isOpen={this.state.openEdit} bike={this.state.bike} toggleDialog={this.toggleDialog.bind(this)} />
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>

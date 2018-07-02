@@ -37,6 +37,7 @@ class BikeFormDialog extends React.Component {
 
   handleClose = () => {
     this.setState({ open: false });
+    this.props.toggleDialog();
   };
 
   handleChange = name => event => {
@@ -55,8 +56,8 @@ class BikeFormDialog extends React.Component {
       <div>
         <Button onClick={this.handleClickOpen} className={classes.button} color="primary" variant="contained">Add new bike</Button>
         <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
+          open={this.state.open || this.props.isOpen}
+          onClose={this.handleClose.bind(this)}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
