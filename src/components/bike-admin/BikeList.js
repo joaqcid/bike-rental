@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch, Button, IconButton, Icon } from '@material-ui/core'
+import { Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core'
 import BikeListBodyRow from './BikeListBodyRow'
 
 const styles = theme => ({
@@ -30,14 +30,14 @@ class NoResultsFoundRow extends Component {
 
 class BikeListBody extends Component {
     render() {
-        const { bikes } = this.props;
+        const { bikes, openBikeFormDialog } = this.props;
         return (
             !isLoaded(bikes) ?
                 <LoadingRow />
                 : isEmpty(bikes) ?
                     <NoResultsFoundRow />
                     : Object.keys(bikes).map(
-                        (key, id) => (<BikeListBodyRow key={key} bike={bikes[key]} />)
+                        (key, id) => (<BikeListBodyRow key={key} fid={key} bike={bikes[key]} openBikeFormDialog={openBikeFormDialog} />)
                     )
         )
     }
@@ -45,7 +45,7 @@ class BikeListBody extends Component {
 
 class BikeList extends Component {
     render() {
-        const { classes, bikes } = this.props;
+        const { classes, bikes, openBikeFormDialog } = this.props;
 
         return (
             <Paper className={classes.root}>
@@ -62,7 +62,7 @@ class BikeList extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <BikeListBody bikes={bikes} />
+                        <BikeListBody bikes={bikes} openBikeFormDialog={openBikeFormDialog} />
                     </TableBody>
                 </Table>
             </Paper>

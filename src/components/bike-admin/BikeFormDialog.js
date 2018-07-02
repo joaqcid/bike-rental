@@ -6,11 +6,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Checkbox, Typography, FormControlLabel } from '@material-ui/core'
+import { Checkbox, FormControlLabel } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 const styles = theme => ({
   button: {
@@ -37,7 +36,7 @@ class BikeFormDialog extends React.Component {
 
   handleClose = () => {
     this.setState({ open: false });
-    this.props.toggleDialog();
+    this.props.closeBikeFormDialog();
   };
 
   handleChange = name => event => {
@@ -50,8 +49,7 @@ class BikeFormDialog extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-
+    const { classes, bike } = this.props;
     return (
       <div>
         <Button onClick={this.handleClickOpen} className={classes.button} color="primary" variant="contained">Add new bike</Button>
@@ -73,6 +71,7 @@ class BikeFormDialog extends React.Component {
               type="string"
               fullWidth
               onChange={this.handleChange('model').bind(this)}
+              value={bike.model}
             />
             <TextField
               autoFocus
@@ -82,6 +81,7 @@ class BikeFormDialog extends React.Component {
               type="string"
               onChange={this.handleChange('color').bind(this)}
               fullWidth
+              value={bike.color}
             />
             <TextField
               autoFocus
@@ -91,6 +91,7 @@ class BikeFormDialog extends React.Component {
               type="number"
               onChange={this.handleChange('weight').bind(this)}
               fullWidth
+              value={bike.weight}
             />
             <TextField
               autoFocus
@@ -100,6 +101,7 @@ class BikeFormDialog extends React.Component {
               type="string"
               onChange={this.handleChange('location').bind(this)}
               fullWidth
+              value={bike.location}
             />
             <FormControlLabel
               control={
@@ -108,6 +110,7 @@ class BikeFormDialog extends React.Component {
                   checked={this.state.checkedA}
                   onChange={this.handleChange('available').bind(this)}
                   value="available"
+                  checked={bike.available}
                 />
               }
               label="Available"
@@ -130,6 +133,6 @@ class BikeFormDialog extends React.Component {
 export default compose(
   withStyles(styles),
   firebaseConnect([
-    'bikes' // { path: '/todos' } // object notation
+    'bikes'
   ])
 )(BikeFormDialog)

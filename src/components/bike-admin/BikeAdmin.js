@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch, Button, IconButton, Icon } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
 import BikeFormDialog from './BikeFormDialog'
 import BikeList from './BikeList'
@@ -20,38 +16,37 @@ const styles = theme => ({
 });
 
 class BikeAdmin extends Component {
-
   state = {
-    isOpen: false,
+    isOpenBikeFormDialog: false,
     bike: {}
   }
 
-  toggleDialog(){
-    this.setState({
-      openEdit: !this.state.openEdit,      
-    });
+  openBikeFormDialog(event, fid, bike) {
+    this.setState((prevState, props) => ({
+      isOpenBikeFormDialog: true,
+      bike: {
+        ...bike,
+        fid,
+      }
+    }));    
+  }
+
+  closeBikeFormDialog() {
+    this.setState((prevState, props) => ({
+      isOpenBikeFormDialog: false
+    }));    
   }
 
   render() {
-    const { classes, bikes } = this.props;
-
     return (
       <div>
-        <BikeFormDialog isOpen={this.state.openEdit} bike={this.state.bike} toggleDialog={this.toggleDialog.bind(this)} />
-        <BikeList />        
+        <BikeFormDialog isOpen={this.state.isOpenBikeFormDialog} bike={this.state.bike} closeBikeFormDialog={this.closeBikeFormDialog.bind(this)} />
+        <BikeList openBikeFormDialog={this.openBikeFormDialog.bind(this)} />
       </div>
     )
   }
 }
 
 export default compose(
-  withStyles(styles),
-  firebaseConnect([
-    'bikes'
-  ]),
-  connect((state) => {
-    return {
-      bikes: state.firebase.data.bikes,
-    }
-  })
+  withStyles(styles)
 )(BikeAdmin)
