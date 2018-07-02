@@ -4,6 +4,7 @@ import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch, Button, IconButton, Icon } from '@material-ui/core'
+import BikeListBodyRow from './BikeListBodyRow'
 
 const styles = theme => ({
     root: {
@@ -27,53 +28,24 @@ class NoResultsFoundRow extends Component {
     }
 }
 
-class BikeBodyRow extends Component {
-    handleDelete(event, key) {
-        const { firebase } = this.props;
-        firebase.ref(`/bikes/${key}`).set(null);
-    }
-
-    handleEdit(event, key, item) {
-        this.setState({
-            openEdit: true,
-            bike: item,
-        });
-    }
-
+class BikeListBody extends Component {
     render() {
-        const { key, bike, classes } = this.props;
+        const { bikes } = this.props;
         return (
-            <TableRow key={key}>
-                <TableCell>{key}</TableCell>
-                <TableCell>{bike.model}</TableCell>
-                <TableCell>{bike.color}</TableCell>
-                <TableCell numeric>{bike.weight}</TableCell>
-                <TableCell>{bike.location}</TableCell>
-                <TableCell>{bike.available ? 'yes' : 'no'}</TableCell>
-                <TableCell>
-                    <IconButton className={classes.button} aria-label="Edit" onClick={event => this.handleEdit(event, key, bike)} >
-                        <Icon>edit</Icon>
-                    </IconButton>
-                    <IconButton className={classes.button} aria-label="Delete" onClick={event => this.handleDelete(event, key)}>
-                        <Icon>delete</Icon>
-                    </IconButton>
-                </TableCell>
-            </TableRow>
+            !isLoaded(bikes) ?
+                <LoadingRow />
+                : isEmpty(bikes) ?
+                    <NoResultsFoundRow />
+                    : Object.keys(bikes).map(
+                        (key, id) => (<BikeListBodyRow key={key} bike={bikes[key]} />)
+                    )
         )
     }
 }
-withStyles(styles)(BikeBodyRow)
 
 class BikeList extends Component {
     render() {
         const { classes, bikes } = this.props;
-        const bikesList = !isLoaded(bikes) ?
-            <LoadingRow />
-            : isEmpty(bikes) ?
-                <NoResultsFoundRow />
-                : Object.keys(bikes).map(
-                    (key, id) => (<BikeBodyRow key={key} bike={bikes[key]} />)
-                )
 
         return (
             <Paper className={classes.root}>
@@ -90,7 +62,7 @@ class BikeList extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {bikesList}
+                        <BikeListBody bikes={bikes} />
                     </TableBody>
                 </Table>
             </Paper>
