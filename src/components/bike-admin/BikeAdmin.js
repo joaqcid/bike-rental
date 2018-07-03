@@ -30,7 +30,14 @@ class BikeAdmin extends Component {
     this.setState((prevState, props) => ({
       bikeFormDialogIsOpen: true,
       bikeFormDialogAction: 'create',
-      bike: {}
+      bike: {
+        model:'',
+        color:'',
+        weight:'',
+        location:'',
+        available:false
+      },
+      fid: null
     }));
   }
 
@@ -51,11 +58,11 @@ class BikeAdmin extends Component {
     }));
   }
 
-  handleChange = name => event => {
+  handleChange = event => {
     this.setState({
       bike: {
         ...this.state.bike,
-        [name]: event.target.value,
+        [event.target.name]: event.target.value,
       }
     })
   };

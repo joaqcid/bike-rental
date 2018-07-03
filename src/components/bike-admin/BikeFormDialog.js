@@ -18,7 +18,7 @@ const styles = theme => ({
 
 class BikeFormDialog extends React.Component {
 
-  ok() {
+  ok(event) {
     if (this.props.action === 'create')
       this.addBike();
     else
@@ -57,8 +57,9 @@ class BikeFormDialog extends React.Component {
               id="model"
               label="Model"
               type="string"
+              name="model"
               fullWidth
-              onChange={handleChange('model').bind(this)}
+              onChange={(event)=> handleChange(event)}
               value={bike.model}
               inputProps={{ tabIndex: 1 }}
             />
@@ -67,7 +68,8 @@ class BikeFormDialog extends React.Component {
               id="color"
               label="Color"
               type="string"
-              onChange={handleChange('color').bind(this)}
+              name="color"
+              onChange={(event)=> handleChange(event)}
               fullWidth
               value={bike.color}
               inputProps={{ tabIndex: 2 }}
@@ -77,7 +79,8 @@ class BikeFormDialog extends React.Component {
               id="weight"
               label="Weight"
               type="number"
-              onChange={handleChange('weight').bind(this)}
+              name="weight"
+              onChange={(event)=> handleChange(event)}
               fullWidth
               value={bike.weight}
               inputProps={{ tabIndex: 3 }}
@@ -87,7 +90,8 @@ class BikeFormDialog extends React.Component {
               id="location"
               label="Location"
               type="string"
-              onChange={handleChange('location').bind(this)}
+              name="location"
+              onChange={(event)=> handleChange(event)}
               fullWidth
               value={bike.location}
               inputProps={{ tabIndex: 4 }}
@@ -96,8 +100,9 @@ class BikeFormDialog extends React.Component {
               control={
                 <Checkbox
                   color="primary"
-                  onChange={handleChange('available').bind(this)}
+                  onChange={(event)=> handleChange(event)}
                   value="available"
+                  name="available"
                   checked={bike.available}
                   inputProps={{ tabIndex: 5 }}
                 />
@@ -113,7 +118,7 @@ class BikeFormDialog extends React.Component {
               Cancel
             </Button>
             <Button
-              onClick={this.ok.bind(this)}
+              onClick={(event) => this.ok(event)}
               color="primary"
             >
               OK
