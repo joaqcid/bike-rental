@@ -3,6 +3,7 @@ import { compose } from 'redux'
 import { withStyles } from '@material-ui/core/styles';
 import BikeFormDialog from './BikeFormDialog'
 import BikeList from './BikeList'
+import { Button } from '@material-ui/core'
 
 const styles = theme => ({
   root: {
@@ -12,36 +13,76 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing.unit,
+    marginLeft: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3,
   }
 });
 
 class BikeAdmin extends Component {
   state = {
-    isOpenBikeFormDialog: false,
-    bike: {}
+    bikeFormDialogIsOpen: false,
+    bikeFormDialogAction: 'create',
+    bike: {},
+    fid: null
   }
 
-  openBikeFormDialog(event, fid, bike) {
+  createBike() {
     this.setState((prevState, props) => ({
-      isOpenBikeFormDialog: true,
+      bikeFormDialogIsOpen: true,
+      bikeFormDialogAction: 'create',
+      bike: {}
+    }));
+  }
+
+  editBike(fid, bike) {
+    this.setState((prevState, props) => ({
+      bikeFormDialogIsOpen: true,
+      bikeFormDialogAction: 'edit',
       bike: {
-        ...bike,
-        fid,
-      }
-    }));    
+        ...bike
+      },
+      fid
+    }));
   }
 
   closeBikeFormDialog() {
     this.setState((prevState, props) => ({
-      isOpenBikeFormDialog: false
-    }));    
+      bikeFormDialogIsOpen: false
+    }));
   }
 
+  handleChange = name => event => {
+    this.setState({
+      bike: {
+        ...this.state.bike,
+        [name]: event.target.value,
+      }
+    })
+  };
+
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <BikeFormDialog isOpen={this.state.isOpenBikeFormDialog} bike={this.state.bike} closeBikeFormDialog={this.closeBikeFormDialog.bind(this)} />
-        <BikeList openBikeFormDialog={this.openBikeFormDialog.bind(this)} />
+        <Button
+          onClick={() => this.createBike()}
+          className={classes.button}
+          color="primary"
+          variant="contained"
+        >
+          Add new bike
+        </Button>
+        <BikeFormDialog
+          action={this.state.bikeFormDialogAction}
+          isOpen={this.state.bikeFormDialogIsOpen}
+          bike={this.state.bike}
+          fid={this.state.fid}
+          handleChange={this.handleChange.bind(this)}
+          close={this.closeBikeFormDialog.bind(this)}
+        />
+        <BikeList
+          editBike={this.editBike.bind(this)}
+        />
       </div>
     )
   }

@@ -11,13 +11,13 @@ const styles = theme => ({
 });
 
 class BikeListBodyRow extends Component {
-    handleDelete(event, fid) {
+    deleteBike(fid) {
         const { firebase } = this.props;
         firebase.ref(`/bikes/${fid}`).set(null);
     }
 
     render() {
-        const { fid, bike, classes, openBikeFormDialog } = this.props;
+        const { fid, bike, classes, editBike } = this.props;
         return (
             <TableRow key={fid}>
                 <TableCell>{fid}</TableCell>
@@ -27,10 +27,10 @@ class BikeListBodyRow extends Component {
                 <TableCell>{bike.location}</TableCell>
                 <TableCell>{bike.available ? 'yes' : 'no'}</TableCell>
                 <TableCell>
-                    <IconButton className={classes.button} aria-label="Edit" onClick={event => openBikeFormDialog(event, fid, bike)} >
+                    <IconButton className={classes.button} aria-label="Edit" onClick={() => editBike(fid, bike)} >
                         <Icon>edit</Icon>
                     </IconButton>
-                    <IconButton className={classes.button} aria-label="Delete" onClick={event => this.handleDelete(event, fid)}>
+                    <IconButton className={classes.button} aria-label="Delete" onClick={() => this.deleteBike(fid)}>
                         <Icon>delete</Icon>
                     </IconButton>
                 </TableCell>

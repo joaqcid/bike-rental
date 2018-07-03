@@ -13,55 +13,43 @@ import { firebaseConnect } from 'react-redux-firebase'
 
 const styles = theme => ({
   button: {
-    marginLeft: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 3,
   }
 });
 
 class BikeFormDialog extends React.Component {
-  state = {
-    open: false,
-    bike: {}
-  };
 
-  addBike() {
-    const { bike } = this.state;
-    this.props.firebase.ref('bikes').push(bike);
-    this.setState({ open: false });
+  ok() {
+    if (this.props.action === 'create')
+      this.addBike();
+    else
+      this.editBike();
+
+    this.props.close();
   }
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
+  addBike() {
+    const { bike } = this.props;
+    this.props.firebase.ref('bikes').push(bike);
+  }
 
-  handleClose = () => {
-    this.setState({ open: false });
-    this.props.closeBikeFormDialog();
-  };
-
-  handleChange = name => event => {
-    this.setState({
-      bike: {
-        ...this.state.bike,
-        [name]: event.target.value,
-      }
-    })
-  };
+  editBike() {
+    const { bike } = this.props;
+    this.props.firebase.ref(`bikes/${this.props.fid}`).update(bike);
+  }
 
   render() {
-    const { classes, bike } = this.props;
+    const { classes, action, close, bike, isOpen, handleChange } = this.props;
     return (
       <div>
-        <Button onClick={this.handleClickOpen} className={classes.button} color="primary" variant="contained">Add new bike</Button>
         <Dialog
-          open={this.state.open || this.props.isOpen}
-          onClose={this.handleClose.bind(this)}
+          open={isOpen}
+          onClose={close.bind(this)}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+          <DialogTitle id="form-dialog-title">{action === 'create' ? 'Create Bike' : 'Edit Bike'}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Create a bike
+
             </DialogContentText>
             <TextField
               autoFocus
@@ -70,57 +58,64 @@ class BikeFormDialog extends React.Component {
               label="Model"
               type="string"
               fullWidth
-              onChange={this.handleChange('model').bind(this)}
+              onChange={handleChange('model').bind(this)}
               value={bike.model}
+              inputProps={{ tabIndex: 1 }}
             />
             <TextField
-              autoFocus
               margin="dense"
               id="color"
               label="Color"
               type="string"
-              onChange={this.handleChange('color').bind(this)}
+              onChange={handleChange('color').bind(this)}
               fullWidth
               value={bike.color}
+              inputProps={{ tabIndex: 2 }}
             />
             <TextField
-              autoFocus
               margin="dense"
               id="weight"
               label="Weight"
               type="number"
-              onChange={this.handleChange('weight').bind(this)}
+              onChange={handleChange('weight').bind(this)}
               fullWidth
               value={bike.weight}
+              inputProps={{ tabIndex: 3 }}
             />
             <TextField
-              autoFocus
               margin="dense"
               id="location"
               label="Location"
               type="string"
-              onChange={this.handleChange('location').bind(this)}
+              onChange={handleChange('location').bind(this)}
               fullWidth
               value={bike.location}
+              inputProps={{ tabIndex: 4 }}
             />
             <FormControlLabel
               control={
                 <Checkbox
                   color="primary"
-                  checked={this.state.checkedA}
-                  onChange={this.handleChange('available').bind(this)}
+                  onChange={handleChange('available').bind(this)}
                   value="available"
                   checked={bike.available}
+                  inputProps={{ tabIndex: 5 }}
                 />
               }
               label="Available"
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
+            <Button
+              onClick={close.bind(this)}
+              color="primary"
+            >
               Cancel
             </Button>
-            <Button onClick={this.addBike.bind(this)} color="primary">
+            <Button
+              onClick={this.ok.bind(this)}
+              color="primary"
+            >
               OK
             </Button>
           </DialogActions>

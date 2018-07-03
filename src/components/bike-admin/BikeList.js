@@ -30,14 +30,14 @@ class NoResultsFoundRow extends Component {
 
 class BikeListBody extends Component {
     render() {
-        const { bikes, openBikeFormDialog } = this.props;
+        const { bikes, editBike } = this.props;
         return (
             !isLoaded(bikes) ?
                 <LoadingRow />
                 : isEmpty(bikes) ?
                     <NoResultsFoundRow />
                     : Object.keys(bikes).map(
-                        (key, id) => (<BikeListBodyRow key={key} fid={key} bike={bikes[key]} openBikeFormDialog={openBikeFormDialog} />)
+                        (key, id) => (<BikeListBodyRow key={key} fid={key} bike={bikes[key]} editBike={editBike} />)
                     )
         )
     }
@@ -45,7 +45,7 @@ class BikeListBody extends Component {
 
 class BikeList extends Component {
     render() {
-        const { classes, bikes, openBikeFormDialog } = this.props;
+        const { classes, bikes, editBike } = this.props;
 
         return (
             <Paper className={classes.root}>
@@ -62,7 +62,7 @@ class BikeList extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <BikeListBody bikes={bikes} openBikeFormDialog={openBikeFormDialog} />
+                        <BikeListBody bikes={bikes} editBike={editBike} />
                     </TableBody>
                 </Table>
             </Paper>
