@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import BikeFormDialog from './BikeFormDialog'
 import BikeList from './BikeList'
 import { Button } from '@material-ui/core'
+import { userIsAuthenticatedRedir, userIsNotAuthenticatedRedir, userIsAdminRedir, userIsAuthenticated, userIsNotAuthenticated } from '../../auth/'
+import { firebaseConnect } from 'react-redux-firebase'
 
 const styles = theme => ({
   root: {
@@ -31,11 +33,11 @@ class BikeAdmin extends Component {
       bikeFormDialogIsOpen: true,
       bikeFormDialogAction: 'create',
       bike: {
-        model:'',
-        color:'',
-        weight:'',
-        location:'',
-        available:false
+        model: '',
+        color: '',
+        weight: '',
+        location: '',
+        available: false
       },
       fid: null
     }));
@@ -96,5 +98,7 @@ class BikeAdmin extends Component {
 }
 
 export default compose(
-  withStyles(styles)
+  withStyles(styles),
+  firebaseConnect(),
+  userIsAuthenticatedRedir
 )(BikeAdmin)

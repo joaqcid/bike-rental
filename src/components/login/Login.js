@@ -5,6 +5,12 @@ import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 // import GoogleButton from 'react-google-button' // optional
 
+const styles = theme => ({    
+  root: {
+      margin: theme.spacing.unit * 3,
+  },
+});
+
 export const Login = ({ firebase, auth }) => (
   <div>
     <button // <GoogleButton/> button can be used instead
@@ -30,7 +36,8 @@ Login.propTypes = {
   auth: PropTypes.object
 }
 
-export default compose(  
+export default compose(
+
   firebaseConnect(), // withFirebase can also be used
   connect(({ firebase: { auth } }) => ({ auth }))
 )(Login)

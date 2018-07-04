@@ -14,7 +14,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "recompose": "^0.27.1",
-    "redux": "^4.0.0"
+    "redux": "^4.0.0",
+    "redux-auth-wrapper": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
