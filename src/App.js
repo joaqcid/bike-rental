@@ -5,6 +5,7 @@ import Home from './components/Home';
 import BikeAdmin from './components/bike-admin/BikeAdmin';
 import { store } from './redux/store';
 import { Provider } from 'react-redux'
+import Login from './components/login/Login'
 
 
 class App extends React.Component {
@@ -17,6 +18,7 @@ class App extends React.Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/bikes" component={BikeAdmin} />
+              <Route path="/login" component={Login} />
             </Switch>
           </div>
         </BrowserRouter>

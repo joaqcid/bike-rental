@@ -5,6 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { List, Button, IconButton, Typography, Toolbar, AppBar, Divider, Drawer } from '@material-ui/core';
 import { managerMenuListItems, userMenuListItems } from './MenuItems';
+import { Link } from 'react-router-dom'
+import { firebaseConnect } from 'react-redux-firebase';
+import { connect } from 'react-redux'
+import { compose } from 'redux'
 
 const styles = {
   root: {
@@ -35,17 +39,21 @@ class MenuAppBar extends React.Component {
     });
   };
 
-  handleChange = (event, checked) => {
+  handleChange(event, checked) {
     this.setState({ auth: checked });
   };
 
-  handleMenu = event => {
+  handleMenu(event) {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  handleClose = () => {
+  handleClose() {
     this.setState({ anchorEl: null });
   };
+
+  logout() {
+    this.props.firebase.logout();
+  }
 
   render() {
     const { classes } = this.props;
@@ -73,8 +81,24 @@ class MenuAppBar extends React.Component {
             <Typography variant="title" color="inherit" className={classes.flex}>
               Bike Rental
             </Typography>
-            <Button color="inherit">Login</Button>
-            <Button color="inherit">Logout</Button>
+            <Button
+              color="inherit"
+              component={Link} to="/login"
+            >
+              Sign In
+            </Button>
+            <Button
+              color="inherit"
+              component={Link} to="/login"
+            >
+              Login
+              </Button>
+            <Button
+              color="inherit"
+              onClick={() => this.logout()}
+            >
+              Logout
+            </Button>
           </Toolbar>
         </AppBar>
         <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
@@ -96,4 +120,7 @@ MenuAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MenuAppBar);
+export default compose(
+  withStyles(styles),
+  firebaseConnect(),
+)(MenuAppBar)

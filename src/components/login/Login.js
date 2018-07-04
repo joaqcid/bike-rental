@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 // import GoogleButton from 'react-google-button' // optional
 
-export const LoginPage = ({ firebase, auth }) => (
-  <div className={classes.container}>
+export const Login = ({ firebase, auth }) => (
+  <div>
     <button // <GoogleButton/> button can be used instead
       onClick={() => firebase.login({ provider: 'google', type: 'popup' })}
     >Login With Google</button>
@@ -23,14 +23,14 @@ export const LoginPage = ({ firebase, auth }) => (
   </div>
 )
 
-LoginPage.propTypes = {
+Login.propTypes = {
   firebase: PropTypes.shape({
     login: PropTypes.func.isRequired
   }),
   auth: PropTypes.object
 }
 
-export default compose(
+export default compose(  
   firebaseConnect(), // withFirebase can also be used
   connect(({ firebase: { auth } }) => ({ auth }))
-)(LoginPage)
+)(Login)
